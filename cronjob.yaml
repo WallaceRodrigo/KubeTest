@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: kubetest-cronjob
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: kubetest-cronjob
+              image: curlimages/curl:latest
+              args: ["curl", "-X", "GET", "http://34.71.168.135:80/"]
+          restartPolicy: OnFailure

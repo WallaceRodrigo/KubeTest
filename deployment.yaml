@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubetest-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kubetest
+  template:
+    metadata:
+      labels:
+        app: kubetest
+    spec:
+      containers:
+        - name: kubetest
+          image: gcr.io/handy-outpost-423914-i4/kubetest:v1
+          ports:
+            - containerPort: 80
+          env:
+            - name: ConnectionStrings__DefaultConnection
+              value: "Server=10.104.240.3;Database=jobsdb;User Id=ijs;Password=localPass;"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubetest-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: kubetest
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
